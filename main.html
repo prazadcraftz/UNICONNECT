@@ -2962,7 +2962,7 @@ Chandigarh University`;
                         authorInitial: (question.author?.name || question.author?.email || 'U').charAt(0).toUpperCase(),
                         university: question.university || 'Unknown University',
                         timestamp: new Date(question.createdAt || question.timestamp),
-                        likedBy: question.likes || [],
+                        likedBy: question.likedBy || question.likes || [],
                         comments: question.comments || []
                     }));
                     
@@ -3040,62 +3040,9 @@ Chandigarh University`;
                 };
             }
             
-            setupDebugPanel() {
-                const refreshBtn = document.getElementById('debug-refresh-btn');
-                const testLikeBtn = document.getElementById('debug-test-like-btn');
-                
-                if (refreshBtn) {
-                    refreshBtn.addEventListener('click', () => {
-                        this.updateDebugInfo();
-                    });
-                }
-                
-                if (testLikeBtn) {
-                    testLikeBtn.addEventListener('click', () => {
-                        if (this.questions.length > 0) {
-                            const firstQuestion = this.questions[0];
-                            console.log('Debug: Testing like for question:', firstQuestion.id);
-                            this.toggleLike(firstQuestion.id);
-                            setTimeout(() => this.updateDebugInfo(), 500);
-                        }
-                    });
-                }
-                
-                const directLikeBtn = document.getElementById('debug-direct-like-btn');
-                if (directLikeBtn) {
-                    directLikeBtn.addEventListener('click', () => {
-                        if (this.questions.length > 0) {
-                            const firstQuestion = this.questions[0];
-                            console.log('Debug: Testing direct like for question:', firstQuestion.id);
-                            window.UniConnectApp.testLikeDirect(firstQuestion.id);
-                            setTimeout(() => this.updateDebugInfo(), 500);
-                        }
-                    });
-                }
-                
-                // Update debug info initially
-                this.updateDebugInfo();
-            }
+
             
-            updateDebugInfo() {
-                const userEmailSpan = document.getElementById('debug-user-email');
-                const questionsCountSpan = document.getElementById('debug-questions-count');
-                const totalLikesSpan = document.getElementById('debug-total-likes');
-                
-                if (userEmailSpan) {
-                    const userEmail = localStorage.getItem('userEmail');
-                    userEmailSpan.textContent = userEmail || 'Not logged in';
-                }
-                
-                if (questionsCountSpan) {
-                    questionsCountSpan.textContent = this.questions.length;
-                }
-                
-                if (totalLikesSpan) {
-                    const totalLikes = this.questions.reduce((sum, q) => sum + (q.likedBy ? q.likedBy.length : 0), 0);
-                    totalLikesSpan.textContent = totalLikes;
-                }
-            }
+
             
             setupUniversityFilter() {
                 const filterSelect = document.getElementById('university-filter');
@@ -3298,8 +3245,7 @@ Chandigarh University`;
                     });
                 }
                 
-                // Update debug info after rendering
-                this.updateDebugInfo();
+
             }
             
             createQuestionElement(question) {
@@ -3329,7 +3275,7 @@ Chandigarh University`;
                                 </div>
                             </div>
                         </div>
-                        <span class="px-3 py-1 ${tagColors[question.tag]} text-sm rounded-full">${question.tag}</span>
+                        <span class="px-3 py-1 ${tagColors[question.tags && question.tags.length > 0 ? question.tags[0] : 'Career']} text-sm rounded-full">${question.tags && question.tags.length > 0 ? question.tags[0] : 'Career'}</span>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">${question.title}</h3>
                     <p class="text-gray-700 mb-4">${question.content}</p>
